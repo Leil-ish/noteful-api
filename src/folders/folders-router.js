@@ -12,7 +12,7 @@ const serializeFolder = folder => ({
 })
 
 foldersRouter
-    .route('/')
+    .route('/api/folders')
     .get((req, res, next) => {
         FoldersService.getAllFolders(
             req.app.get('db')
@@ -49,7 +49,7 @@ foldersRouter
 
 
 foldersRouter 
-    .route('/:folder_id')
+    .route('/api/:folder_id')
     .all((req, res, next) => {
         FoldersService.getById(knexInstance, req.params.folder_id)
         .then(folder => {
@@ -82,7 +82,7 @@ foldersRouter
         if (numberOfValues === 0) {
             return res.status(400).json({
                 error: {
-                    message: `Request must contain a name`
+                    message: `Request must contain a name.`
                 }
             })
         }
