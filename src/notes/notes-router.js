@@ -1,22 +1,23 @@
-const path = require("path");
-const express = require("express");
-const xss = require("xss");
+const path = require('path');
+const express = require('express');
+const xss = require('xss');
 const jsonParser = express.json();
-const NotesService = require("./notes-service");
+const NotesService = require('./notes-service');
 const notesRouter = express.Router();
 
 const serializeNote = note => ({
   id: note.id,
   name: xss(note.note_name),
+  modified: note.modified,
   folderid: note.folder_id,
   content: xss(note.content)
 });
 
 
 notesRouter
-  .route("/api/notes")
+  .route('/')
   .get((req, res, next) => {
-    const knexInstance = req.app.get("db");
+    const knexInstance = req.app.get('db');
     NotesService.getAllNotes(knexInstance)
       .then(notes => {
         res.json(notes.map(serializeNote));
@@ -33,7 +34,7 @@ notesRouter
           error: { message: `Missing '${key}' in request body` }
         });
 
-   NotesService.insertNote(req.app.get("db"), newNote)
+   NotesService.insertNote(req.app.get('db'), newNote)
       .then(note => {
         res
           .status(201)
@@ -44,9 +45,9 @@ notesRouter
   });
 
 notesRouter
-  .route("/api/:note_id")
+  .route('/:note_id')
   .all((req, res, next) => {
-    NotesService.getById(req.app.get("db"), req.params.note_id)
+    NotesService.getById(req.app.get('db'), req.params.note_id)
       .then(note => {
         if (!note) {
           return res.status(404).json({
@@ -62,7 +63,7 @@ notesRouter
     res.json(serializeNote(res.note));
   })
   .delete((req, res, next) => {
-    NotesService.deleteNote(req.app.get("db"), req.params.note_id)
+    NotesService.deleteNote(req.app.get('db'), req.params.note_id)
       .then(numRowsAffected => {
         res.status(204).end();
       })
@@ -82,7 +83,7 @@ notesRouter
       });
 
     NotesService.updateNote(
-      req.app.get("db"),
+      req.app.get('db'),
       req.params.note_id,
       noteToUpdate
     )

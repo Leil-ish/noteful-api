@@ -1,8 +1,8 @@
 {
-  "name": "express-boilerplate",
+  "name": "noteful-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
@@ -32,8 +32,5 @@
     "nodemon": "^1.19.1",
     "postgrator-cli": "^3.1.0",
     "supertest": "^4.0.2"
-  },
-  "engines": {
-    "node": "12.1.0"
   }
 }
