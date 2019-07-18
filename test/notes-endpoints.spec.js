@@ -58,7 +58,7 @@ describe('Notes Endpoints', function() {
           .get(`/api/notes`)
           .expect(200)
           .expect(res => {
-            expect(res.body[0].title).to.eql(expectedNote.title)
+            expect(res.body[0].note_name).to.eql(expectedNote.note_name)
             expect(res.body[0].content).to.eql(expectedNote.content)
           })
       })
@@ -104,10 +104,10 @@ describe('Notes Endpoints', function() {
 
       it('removes XSS attack content', () => {
         return supertest(app)
-          .get(`/api/notes/${maliciousNote.id}`)
+          .get(`/api/notes/${maliciousNote.note_id}`)
           .expect(200)
           .expect(res => {
-            expect(res.body.title).to.eql(expectedNote.title)
+            expect(res.body.note_name).to.eql(expectedNote.note_name)
             expect(res.body.content).to.eql(expectedNote.content)
           })
       })
@@ -117,8 +117,7 @@ describe('Notes Endpoints', function() {
   describe(`POST /api/notes`, () => {
     it(`creates an note, responding with 201 and the new note`, () => {
       const newNote = {
-        title: 'Test new note',
-        style: 'Listicle',
+        note_name: 'Test new note',
         content: 'Test new note content...'
       }
       return supertest(app)
@@ -126,28 +125,26 @@ describe('Notes Endpoints', function() {
         .send(newNote)
         .expect(201)
         .expect(res => {
-          expect(res.body.title).to.eql(newNote.title)
-          expect(res.body.style).to.eql(newNote.style)
+          expect(res.body.note_name).to.eql(newNote.note_name)
           expect(res.body.content).to.eql(newNote.content)
-          expect(res.body).to.have.property('id')
-          expect(res.headers.location).to.eql(`/api/notes/${res.body.id}`)
+          expect(res.body).to.have.property('note_id')
+          expect(res.headers.location).to.eql(`/api/notes/${res.body.note_id}`)
           const expected = new Date().toLocaleString()
-          const actual = new Date(res.body.date_published).toLocaleString()
+          const actual = new Date(res.body.modified).toLocaleString()
           expect(actual).to.eql(expected)
         })
         .then(res =>
           supertest(app)
-            .get(`/api/notes/${res.body.id}`)
+            .get(`/api/notes/${res.body.note_id}`)
             .expect(res.body)
         )
     })
 
-    const requiredFields = ['title', 'style', 'content']
+    const requiredFields = ['note_name']
 
     requiredFields.forEach(field => {
       const newNote = {
-        title: 'Test new note',
-        style: 'Listicle',
+        note_name: 'Test new note',
         content: 'Test new note content...'
       }
 
@@ -170,7 +167,7 @@ describe('Notes Endpoints', function() {
         .send(maliciousNote)
         .expect(201)
         .expect(res => {
-          expect(res.body.title).to.eql(expectedNote.title)
+          expect(res.body.note_name).to.eql(expectedNote.note_name)
           expect(res.body.content).to.eql(expectedNote.content)
         })
     })
@@ -197,7 +194,7 @@ describe('Notes Endpoints', function() {
 
       it('responds with 204 and removes the note', () => {
         const idToRemove = 2
-        const expectedNotes = testNotes.filter(note => note.id !== idToRemove)
+        const expectedNotes = testNotes.filter(note => note.note_id !== idToRemove)
         return supertest(app)
           .delete(`/api/notes/${idToRemove}`)
           .expect(204)
@@ -232,7 +229,7 @@ describe('Notes Endpoints', function() {
       it('responds with 204 and updates the note', () => {
         const idToUpdate = 2
         const updateNote = {
-          title: 'updated note title',
+          note_name: 'updated note name',
           style: 'Interview',
           content: 'updated note content',
         }
@@ -266,7 +263,7 @@ describe('Notes Endpoints', function() {
       it(`responds with 204 when updating only a subset of fields`, () => {
         const idToUpdate = 2
         const updateNote = {
-          title: 'updated note title',
+          note_name: 'updated note note_name',
         }
         const expectedNote = {
           ...testNotes[idToUpdate - 1],

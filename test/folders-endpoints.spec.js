@@ -1,6 +1,6 @@
 const knex = require('knex')
 const app = require('../src/app')
-const { makeFoldersArray, makeMaliciousFolder } = require('./folders.fixtures')
+const { makeFoldersArray } = require('./folders.fixtures')
 
 describe('Folders Endpoints', function() {
   let db
@@ -43,26 +43,6 @@ describe('Folders Endpoints', function() {
           .expect(200, testFolders)
       })
     })
-
-    context(`Given an XSS attack folder`, () => {
-      const { maliciousFolder, expectedFolder } = makeMaliciousFolder()
-
-      beforeEach('insert malicious folder', () => {
-        return db
-          .into('folders')
-          .insert([ maliciousFolder ])
-      })
-
-      it('removes XSS attack content', () => {
-        return supertest(app)
-          .get(`/api/folders`)
-          .expect(200)
-          .expect(res => {
-            expect(res.body[0].title).to.eql(expectedFolder.title)
-            expect(res.body[0].content).to.eql(expectedFolder.content)
-          })
-      })
-    })
   })
 
   describe(`GET /api/folders/:folder_id`, () => {
@@ -92,43 +72,19 @@ describe('Folders Endpoints', function() {
           .expect(200, expectedFolder)
       })
     })
-
-    context(`Given an XSS attack folder`, () => {
-      const { maliciousFolder, expectedFolder } = makeMaliciousFolder()
-
-      beforeEach('insert malicious folder', () => {
-        return db
-          .into('folders')
-          .insert([ maliciousFolder ])
-      })
-
-      it('removes XSS attack content', () => {
-        return supertest(app)
-          .get(`/api/folders/${maliciousFolder.id}`)
-          .expect(200)
-          .expect(res => {
-            expect(res.body.title).to.eql(expectedFolder.title)
-            expect(res.body.content).to.eql(expectedFolder.content)
-          })
-      })
-    })
   })
 
   describe(`POST /api/folders`, () => {
     it(`creates an folder, responding with 201 and the new folder`, () => {
       const newFolder = {
-        title: 'Test new folder',
-        style: 'Listicle',
-        content: 'Test new folder content...'
+        folder_name: 'Test new folder content...'
       }
       return supertest(app)
         .post('/api/folders')
         .send(newFolder)
         .expect(201)
         .expect(res => {
-          expect(res.body.title).to.eql(newFolder.title)
-          expect(res.body.style).to.eql(newFolder.style)
-          expect(res.body.content).to.eql(newFolder.content)
+          expect(res.body.folder_name).to.eql(newFolder.folder_name)
           expect(res.body).to.have.property('id')
           expect(res.headers.location).to.eql(`/api/folders/${res.body.id}`)
           const expected = new Date().toLocaleString()
@@ -142,13 +98,11 @@ describe('Folders Endpoints', function() {
         )
     })
 
-    const requiredFields = ['title', 'style', 'content']
+    const requiredFields = ['folder_name']
 
     requiredFields.forEach(field => {
       const newFolder = {
-        title: 'Test new folder',
-        style: 'Listicle',
-        content: 'Test new folder content...'
+        folder_name: 'Test new folder content...'
       }
 
       it(`responds with 400 and an error message when the '${field}' is missing`, () => {
@@ -161,18 +115,6 @@ describe('Folders Endpoints', function() {
             error: { message: `Missing '${field}' in request body` }
           })
       })
-    })
-
-    it('removes XSS attack content from response', () => {
-      const { maliciousFolder, expectedFolder } = makeMaliciousFolder()
-      return supertest(app)
-        .post(`/api/folders`)
-        .send(maliciousFolder)
-        .expect(201)
-        .expect(res => {
-          expect(res.body.title).to.eql(expectedFolder.title)
-          expect(res.body.content).to.eql(expectedFolder.content)
-        })
     })
   })
 
@@ -232,9 +174,7 @@ describe('Folders Endpoints', function() {
       it('responds with 204 and updates the folder', () => {
         const idToUpdate = 2
         const updateFolder = {
-          title: 'updated folder title',
-          style: 'Interview',
-          content: 'updated folder content',
+          folder_name: 'updated folder name',
         }
         const expectedFolder = {
           ...testFolders[idToUpdate - 1],
