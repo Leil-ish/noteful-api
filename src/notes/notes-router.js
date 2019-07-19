@@ -6,10 +6,10 @@ const NotesService = require('./notes-service');
 const notesRouter = express.Router();
 
 const serializeNote = note => ({
-  id: note.id,
-  name: xss(note.note_name),
+  note_id: note.note_id,
+  note_name: xss(note.note_name),
   modified: note.modified,
-  folderid: note.folder_id,
+  folder_id: note.folder_id,
   content: xss(note.content)
 });
 
@@ -38,7 +38,7 @@ notesRouter
       .then(note => {
         res
           .status(201)
-          .location(path.posix.join(req.originalUrl, `/${note.id}`))
+          .location(path.posix.join(req.originalUrl, `/${note.note_id}`))
           .json(serializeNote(note));
       })
       .catch(next);
