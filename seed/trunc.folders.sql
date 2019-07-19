@@ -1,1 +1,1 @@
-TRUNCATE folders;
+TRUNCATE TABLE folders CASCADE;
