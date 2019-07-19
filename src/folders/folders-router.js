@@ -64,16 +64,7 @@ foldersRouter
         .catch(next)
     })
     .get((req, res, next) => {res.json(serializeFolder(res.folder))})
-    .delete((req, res, next) => {
-        FoldersService.deleteFolder(
-            req.app.get('db'),
-            req.params.id
-        )
-        .then(() => {
-            res.status(204).end()
-        })
-        .catch(next)
-    })
+ 
     .patch(jsonParser, (req, res, next) => {
         const { name } = req.body
         const folderToUpdate = { name }
