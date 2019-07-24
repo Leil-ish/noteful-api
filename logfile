@@ -1,0 +1,12 @@
+2019-07-21 21:04:19.012 CDT [880] LOG:  listening on IPv6 address "::1", port 5432
+2019-07-21 21:04:19.012 CDT [880] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2019-07-21 21:04:19.078 CDT [880] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2019-07-21 21:04:21.395 CDT [881] LOG:  database system was shut down at 2019-07-21 20:30:18 CDT
+2019-07-21 21:04:22.574 CDT [880] LOG:  database system is ready to accept connections
+2019-07-21 21:22:35.145 CDT [885] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-21 21:23:10.085 CDT [885] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-22 02:21:40.530 CDT [885] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-22 02:21:45.205 CDT [2518] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-22 06:50:25.643 CDT [886] LOG:  stats_timestamp 2019-07-22 11:50:26.109185+00 is later than collector's time 2019-07-22 11:50:25.64324+00 for database 0
+2019-07-23 20:03:20.725 CDT [906] ERROR:  invalid input syntax for integer: "undefined"
+2019-07-23 20:03:20.725 CDT [906] STATEMENT:  select * from "notes" where "note_id" = $1
