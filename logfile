@@ -10,3 +10,9 @@
 2019-07-22 06:50:25.643 CDT [886] LOG:  stats_timestamp 2019-07-22 11:50:26.109185+00 is later than collector's time 2019-07-22 11:50:25.64324+00 for database 0
 2019-07-23 20:03:20.725 CDT [906] ERROR:  invalid input syntax for integer: "undefined"
 2019-07-23 20:03:20.725 CDT [906] STATEMENT:  select * from "notes" where "note_id" = $1
+2019-07-23 20:12:51.257 CDT [11834] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-23 20:12:51.257 CDT [11832] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-24 13:48:38.336 CDT [885] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-24 13:48:40.981 CDT [14999] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-24 13:49:10.956 CDT [885] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2019-07-24 18:29:30.308 CDT [15817] LOG:  using stale statistics instead of current ones because stats collector is not responding

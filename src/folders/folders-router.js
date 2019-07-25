@@ -34,11 +34,8 @@ foldersRouter
             }
         }
 
-        FoldersService.insertFolder(
-            req.app.get('db'),
-            newFolder
-        )
-        .then(folder => {
+    FoldersService.insertFolder(req.app.get('db'), newFolder)
+    .then(folder => {
             res
                 .status(201)
                 .location(path.posix.join(`${req.originalUrl}/${folder.id}`))
@@ -64,6 +61,14 @@ foldersRouter
         .catch(next)
     })
     .get((req, res, next) => {res.json(serializeFolder(res.folder))})
+
+    .delete((req, res, next) => {
+        FoldersService.deleteFolder(req.app.get('db'), req.params.folder_id)
+          .then(numRowsAffected => {
+            res.status(204).end();
+          })
+          .catch(next);
+      })
  
     .patch(jsonParser, (req, res, next) => {
         const { name } = req.body
